@@ -11,36 +11,36 @@ namespace Chess
 
 
         //Game ID
-        int GameID { get; set; }
+        string GameID { get; set; }
         //Rated (T/F)
-        bool rated { get; }
+        string rated { get; set; }
         //Start Time
-        decimal created_at { get; }
+        string created_at { get; set; }
         //End Time
-        decimal last_move_at { get; }
+        string last_move_at { get; set; }
         //Number of Turns
-        int turns { get; }
+        int turns { get; set; }
         //Game Status
-        string victory_status { get; }
+        string victory_status { get; set; }
         //Winner
-        string winner { get; }
+        string winner { get; set; }
         //Time Increment
-        string increment_code { get; }
+        string increment_code { get; set; }
         //White Player ID
-        string white_id { get; }
+        string white_id { get; set; }
         //White Player Rating
-        string white_rating { get; }
-        //Black Player ID
-        string black_id { get; }
-        //Black Player Rating
-        string black_rating { get; }
+        int white_rating { get; set; }
+          //Black Player ID
+         string black_id { get; set; }
+          //Black Player Rating
+         int black_rating { get; set; }
         //All Moves in Standard Chess Notation
-        string moves { get; }
+        string moves { get; set; }
         //Opening Eco (Standardised Code) 
-        string opening_eco { get; }
+        string opening_eco { get; set; }
         //Opening Name
-        string opening_name { get; }
+        string opening_name { get; set; }
         //Opening Ply(Number of moves in the opening phase)
-        int opening_ply { get; }
+        int opening_ply { get; set; }
     }
 }
