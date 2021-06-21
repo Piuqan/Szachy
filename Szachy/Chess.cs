@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CsvHelper.Configuration.Attributes;
-using Microsoft.EntityFrameworkCore;
-
+using System.Collections.Generic;
 
 namespace Chess
 {
@@ -43,5 +41,6 @@ namespace Chess
 
         public string opening_name { get; set; }
         public int opening_ply { get; set; }
+        public virtual WatchedGame watched { get; set; }
     }
 }

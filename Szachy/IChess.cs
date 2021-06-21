@@ -30,10 +30,10 @@ namespace Chess
         string white_id { get; set; }
         //White Player Rating
         int white_rating { get; set; }
-          //Black Player ID
-         string black_id { get; set; }
-          //Black Player Rating
-         int black_rating { get; set; }
+        //Black Player ID
+        string black_id { get; set; }
+        //Black Player Rating
+        int black_rating { get; set; }
         //All Moves in Standard Chess Notation
         string moves { get; set; }
         //Opening Eco (Standardised Code) 

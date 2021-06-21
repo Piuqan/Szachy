@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CsvHelper;
-using Microsoft.EntityFrameworkCore;
 
 namespace Chess
 {
@@ -15,8 +12,15 @@ namespace Chess
         static void Main(string[] args)
         {
             //Console.WriteLine(GetChessGames("games.csv"));
-            ImportDataToDB("games.csv");
+            //ImportDataToDB("games.csv");
+            //Top20LongestGames();
+            WatchedGame nowa = new WatchedGame() { GameID = 139979, Watched = "yes", UserID = 1 };
+            InsertOrUpdate(nowa);
+
         }
+            
+
+
         public static void ImportDataToDB(string path)
         {
             List<Chess> ChessGames = GetChessGames(path);
@@ -47,5 +51,81 @@ namespace Chess
             }
             return returnValue;
         }
+        public static void Top20LongestGames()
+        {
+
+            using (var db = new ChessDBContext())
+            {
+                List<Chess> chessGamesList = db.Chess.OrderByDescending(p => p.turns).ToList();
+                var chessGamesListCropped = chessGamesList.ToList().Take(20);
+                {
+                    foreach (var game in chessGamesListCropped)
+                    {
+                        Console.WriteLine(game.GameID + "    " + game.white_id + "    " + game.black_id + "    " + game.turns);
+                    }
+                }
+            }
+        }
+
+
+
+        public static void AddGame(WatchedGame Game)
+        {
+            using (var db = new ChessDBContext())
+            {
+                db.WatchedGame.Add(Game);
+                db.SaveChanges();
+                Console.WriteLine("Zapisano obejrzenie meczu " + Game.GameID);
+            }
+        }
+
+        public static WatchedGame GetGame(int record)
+        {
+            if (record != 0)
+            {
+                using (var db = new ChessDBContext())
+                {
+                    List<WatchedGame> returnValue;
+                    returnValue = db.WatchedGame.Where(p => p.GameID == record).ToList();
+                    if (returnValue.Count != 0)
+                        return returnValue[0];
+                }
+            }
+            return null;
+        }
+
+
+        public static void UpdateGame(WatchedGame record)
+        {
+            if (record != null)
+            {
+                using (var db = new ChessDBContext())
+                {
+                    db.Update(record);
+                    db.SaveChanges();
+                    Console.WriteLine("Zaktualizowano obejrzenie meczu " + record.GameID);
+
+                }
+            }
+        }
+
+        public static void InsertOrUpdate(WatchedGame Game)
+        {
+            if (Game != null && !string.IsNullOrEmpty(Convert.ToString(Game.GameID)))
+            {
+                    WatchedGame game = GetGame(Game.GameID);
+                    if (game == null)
+                    {
+                        AddGame(Game);
+                    }
+                    else
+                    {
+                        Game.ID = game.ID;
+                        UpdateGame(Game);
+                    }
+            }
+        }
+
     }
+
 }
