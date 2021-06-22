@@ -40,7 +40,9 @@ namespace Chess
         public string opening_eco { get; set; }
 
         public string opening_name { get; set; }
+
         public int opening_ply { get; set; }
-        public virtual WatchedGame watched { get; set; }
+
+        public virtual List<WatchedGame> Watched { get; set; }
     }
 }

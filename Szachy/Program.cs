@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using CsvHelper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chess
 {
@@ -13,9 +14,9 @@ namespace Chess
         {
             //Console.WriteLine(GetChessGames("games.csv"));
             //ImportDataToDB("games.csv");
-            //Top20LongestGames();
-            WatchedGame nowa = new WatchedGame() { GameID = 139979, Watched = "yes", UserID = 1 };
-            InsertOrUpdate(nowa);
+            Top20LongestGames();
+            //WatchedGame nowa = new WatchedGame() { GameID = 139979, Watched = "yes", UserID = 1 };
+            //InsertOrUpdate(nowa);
 
         }
             
@@ -62,6 +63,20 @@ namespace Chess
                     foreach (var game in chessGamesListCropped)
                     {
                         Console.WriteLine(game.GameID + "    " + game.white_id + "    " + game.black_id + "    " + game.turns);
+                    }
+                }
+            }
+        }
+        public static void showWatchedList()
+        {
+
+            using (var db = new ChessDBContext())
+            {
+                List<WatchedGame> chessGamesList = db.WatchedGame.Include(p => p.Chesses).ToList();
+                {
+                    foreach (var game in chessGamesList)
+                    {
+                        Console.WriteLine(game.GameID + "    " + game.Chesses.white_id + "    " + game.Chesses.black_id);
                     }
                 }
             }

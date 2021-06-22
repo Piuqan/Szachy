@@ -8,11 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 namespace Chess
 {
-    [Table("Watched1")]
+    [Table("Watched")]
     public class WatchedGame
     {
+        [Ignore]
+        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
-
         [ForeignKey("ID")]
         public int GameID { get; set; }
 
@@ -20,7 +21,7 @@ namespace Chess
 
         public int UserID{ get; set; }
 
-        public virtual List<Chess> Games { get; set; }
+        public virtual Chess Chesses { get; set; }
 
     }
 }
