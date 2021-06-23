@@ -14,10 +14,17 @@ namespace Chess
         {
             //Console.WriteLine(GetChessGames("games.csv"));
             //ImportDataToDB("games.csv");
-            Top20LongestGames();
-            //WatchedGame nowa = new WatchedGame() { GameID = 139979, Watched = "yes", UserID = 1 };
-            //InsertOrUpdate(nowa);
 
+
+            //TopXLongestGames(10);
+            //WatchedGame nowa = new WatchedGame() { GameID = 139979, Watched = "yes", timesWatched = 1 };
+            //InsertOrUpdate(nowa);
+            //WatchedGame nowa1 = new WatchedGame() { GameID = 159606, Watched = "yes" };
+            //AddWatchedTime(nowa1);
+            //showGames("mate", 1000, 2000, "TRUE");
+            //longestOpenings(10);
+            //gamesOfPlayer("thepawnsofwrath");
+            averageRating();
         }
             
 
@@ -52,13 +59,63 @@ namespace Chess
             }
             return returnValue;
         }
-        public static void Top20LongestGames()
+        public static void averageRating()
+        {
+
+            using (var db = new ChessDBContext())
+            {
+                List<Chess> chessGamesList = db.Chess.ToList();
+
+                {
+                    float avg = 0;
+                    foreach (var game in chessGamesList)
+                    {
+                       avg += (game.white_rating + game.black_rating);
+                    }
+                    Console.WriteLine("Średne ELO graczy wynosi: " + avg / (chessGamesList.Count() * 2));
+                }
+            }
+        }
+        //wypisuje wszystkie gry danego gracza
+        public static void gamesOfPlayer(string playerName)
+        {
+
+            using (var db = new ChessDBContext())
+            {
+                List<Chess> chessGamesList = db.Chess.Where(p => p.white_id == playerName || p.black_id == playerName).OrderByDescending(p => p.GameID).ToList();
+
+                {
+                    foreach (var game in chessGamesList)
+                    {
+                        Console.WriteLine(game.GameID + "    " + game.white_id + "    " + game.black_id + "    " + game.victory_status + " " + game.winner);
+                    }
+                }
+            }
+        }
+        //Wyświetla najdłuższe otwarcia gier
+        public static void longestOpenings(int numberOfGames)
+        {
+
+            using (var db = new ChessDBContext())
+            {
+                List<Chess> chessGamesList = db.Chess.OrderByDescending(p => p.opening_ply).ToList();
+                var chessGamesListCropped = chessGamesList.ToList().Take(numberOfGames);
+                {
+                    foreach (var game in chessGamesListCropped)
+                    {
+                        Console.WriteLine(game.GameID + "    " + game.white_id + "    " + game.black_id + "    " + game.opening_name + " " +game.opening_ply);
+                    }
+                }
+            }
+        }
+        //Wypisuje X najdłuższych gier pod względem wykonanych ruchów
+        public static void TopXLongestGames(int numberOfGames)
         {
 
             using (var db = new ChessDBContext())
             {
                 List<Chess> chessGamesList = db.Chess.OrderByDescending(p => p.turns).ToList();
-                var chessGamesListCropped = chessGamesList.ToList().Take(20);
+                var chessGamesListCropped = chessGamesList.ToList().Take(numberOfGames);
                 {
                     foreach (var game in chessGamesListCropped)
                     {
@@ -67,17 +124,37 @@ namespace Chess
                 }
             }
         }
-        public static void showWatchedList()
+
+        //wypisuje gry które spełniają wymagania
+        public static void showGames(string victoryStatus, int minimumRating, int maximumRating, string isRated)
         {
 
             using (var db = new ChessDBContext())
             {
-                List<WatchedGame> chessGamesList = db.WatchedGame.Include(p => p.Chesses).ToList();
+                List<Chess> chessGamesList = db.Chess.Where(p => p.victory_status == victoryStatus && p.white_rating > minimumRating && p.black_rating > minimumRating
+                                                                && p.white_rating < maximumRating && p.black_rating < maximumRating && p.rated == isRated).OrderBy(p => p.GameID).ToList();
                 {
                     foreach (var game in chessGamesList)
                     {
-                        Console.WriteLine(game.GameID + "    " + game.Chesses.white_id + "    " + game.Chesses.black_id);
+                        Console.WriteLine(game.GameID + "    " + game.white_id + "    " + game.black_id + "    " + game.turns);
                     }
+                }
+            }
+        }
+        public static void AddWatchedTime(WatchedGame Game)
+        {
+
+            using (var db = new ChessDBContext())
+            {
+                var game = GetGame(Game.GameID);
+                if (game == null)
+                {
+                    AddGame(Game);
+                }    
+                else
+                {
+                    game.timesWatched += 1;
+                    UpdateGame(game);
                 }
             }
         }
