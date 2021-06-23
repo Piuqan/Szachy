@@ -21,6 +21,6 @@ namespace Chess
         public int userScore { get; set; }
 
         public string userID { get; set; }
-        public virtual List<Chess> game { get; set; }
+        public virtual Chess game { get; set; }
     }
 }

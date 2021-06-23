@@ -20,12 +20,12 @@ namespace Chess
             showGames("mate", 1000, 2000, "TRUE");
             longestOpenings(10);
             gamesOfPlayer("thepawnsofwrath");
-            WatchedGame nowa = new WatchedGame() { GameID = 1, Watched = "yes", timesWatched = 33 };
-            InsertOrUpdate(nowa);
-            WatchedGame nowa1 = new WatchedGame() { GameID = 1, Watched = "yes" };
-            AddWatchedTime(nowa1);
-            UserScore score = new UserScore { IDGame = 1, userID = "Maciuś32", userScore = 4 };
-            InsertOrUpdateRating(score);
+            //WatchedGame nowa = new WatchedGame() { GameID = 2, Watched = "yes", timesWatched = 33 };
+            //InsertOrUpdate(nowa);
+            //WatchedGame nowa1 = new WatchedGame() { GameID = 1, Watched = "yes" };
+            //AddWatchedTime(nowa1);
+            //UserScore score = new UserScore { IDGame = 1, userID = "Maciuś32", userScore = 4 };
+            //InsertOrUpdateRating(score);
 
         }
 
