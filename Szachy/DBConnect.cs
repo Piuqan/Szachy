@@ -13,6 +13,8 @@ namespace Chess
         }
         public virtual DbSet<Chess> Chess { get; set; }
         public virtual DbSet<WatchedGame> WatchedGame { get; set; }
+        public virtual DbSet<UserScore> UserScores { get; set; }
+
 
     }
 }

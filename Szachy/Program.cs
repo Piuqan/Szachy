@@ -15,18 +15,20 @@ namespace Chess
             //Console.WriteLine(GetChessGames("games.csv"));
             //ImportDataToDB("games.csv");
 
-
-            //TopXLongestGames(10);
-            //WatchedGame nowa = new WatchedGame() { GameID = 139979, Watched = "yes", timesWatched = 1 };
-            //InsertOrUpdate(nowa);
-            //WatchedGame nowa1 = new WatchedGame() { GameID = 159606, Watched = "yes" };
-            //AddWatchedTime(nowa1);
-            //showGames("mate", 1000, 2000, "TRUE");
-            //longestOpenings(10);
-            //gamesOfPlayer("thepawnsofwrath");
             averageRating();
+            TopXLongestGames(10);
+            showGames("mate", 1000, 2000, "TRUE");
+            longestOpenings(10);
+            gamesOfPlayer("thepawnsofwrath");
+            WatchedGame nowa = new WatchedGame() { GameID = 1, Watched = "yes", timesWatched = 33 };
+            InsertOrUpdate(nowa);
+            WatchedGame nowa1 = new WatchedGame() { GameID = 1, Watched = "yes" };
+            AddWatchedTime(nowa1);
+            UserScore score = new UserScore { IDGame = 1, userID = "Maciuś32", userScore = 4 };
+            InsertOrUpdateRating(score);
+
         }
-            
+
 
 
         public static void ImportDataToDB(string path)
@@ -141,6 +143,7 @@ namespace Chess
                 }
             }
         }
+
         public static void AddWatchedTime(WatchedGame Game)
         {
 
@@ -203,7 +206,7 @@ namespace Chess
 
         public static void InsertOrUpdate(WatchedGame Game)
         {
-            if (Game != null && !string.IsNullOrEmpty(Convert.ToString(Game.GameID)))
+            if (Game != null)
             {
                     WatchedGame game = GetGame(Game.GameID);
                     if (game == null)
@@ -218,6 +221,62 @@ namespace Chess
             }
         }
 
+    
+    public static void AdduserRating(UserScore Game)
+    {
+        using (var db = new ChessDBContext())
+        {
+            db.UserScores.Add(Game);
+            db.SaveChanges();
+            Console.WriteLine("Zapisano wynik " + Game.IDGame);
+        }
     }
 
+    public static UserScore GetRating(int record, string userID)
+    {
+        if (record != 0)
+        {
+            using (var db = new ChessDBContext())
+            {
+                List<UserScore> returnValue;
+                    returnValue = db.UserScores.Where(p => p.IDGame == record && p.userID == userID).ToList();
+                if (returnValue.Count != 0)
+                    return returnValue[0];
+            }
+        }
+        return null;
+    }
+
+
+    public static void UpdateRating(UserScore record)
+    {
+        if (record != null)
+        {
+            using (var db = new ChessDBContext())
+            {
+                db.Update(record);
+                db.SaveChanges();
+                Console.WriteLine("Zaktualizowano obejrzenie meczu " + record.IDGame);
+            }
+        }
+    }
+
+    public static void InsertOrUpdateRating(UserScore Game)
+    {
+        if (Game != null && !string.IsNullOrEmpty(Convert.ToString(Game.IDGame)))
+        {
+                UserScore game = GetRating(Game.IDGame, Game.userID);
+            if (game == null)
+            {
+                AdduserRating(Game);
+            }
+            else
+            {
+                Game.ID = game.ID;
+                UpdateRating(Game);
+            }
+        }
+    }
+
+}
 }

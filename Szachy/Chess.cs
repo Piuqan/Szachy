@@ -43,6 +43,8 @@ namespace Chess
 
         public int opening_ply { get; set; }
 
-        public virtual List<WatchedGame> Watched { get; set; }
+        public virtual List<WatchedGame> WatchedGame { get; set; }
+        public virtual List<UserScore> Scores { get; set; }
+
     }
 }
